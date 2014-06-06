@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <!-- POM file generated with GWT webAppCreator -->
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.ge.prototype.samplee</groupId>
-  <artifactId>sample</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>GWT Maven Archetype</name>
+	<!-- POM file generated with GWT webAppCreator -->
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ge.prototype.samplee</groupId>
+	<artifactId>sample</artifactId>
+	<packaging>war</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>GWT Maven Archetype</name>
 
-  <properties>
+	<properties>
 		<!-- Project properties -->
 		<target.jdk>1.7</target.jdk>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -44,6 +42,12 @@
 			<version>${gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.gwt.inject</groupId>
+			<artifactId>gin</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+
 		<dependency> <!-- TODO: remove when upgrade to newer GWT version -->
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
@@ -57,7 +61,21 @@
 			<classifier>sources</classifier>
 			<scope>provided</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.moxieapps.gwt</groupId>
+			<artifactId>uploader</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+			<dependency>
+			<groupId>org.moxieapps.gwt</groupId>
+			<artifactId>highcharts</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-incubator</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>

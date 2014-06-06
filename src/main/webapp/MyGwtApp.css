@@ -32,3 +32,172 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+.gwt-ProgressBar-shell {
+    margin-left: 6px;
+    margin-top: 5px;
+    height: 21px;
+    background-color: #cccccc;
+    border: 1px solid #8c8c8c;
+    overflow: hidden;
+}
+
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+    background:  url('images/progress-bg.png') repeat-x;
+    height: 100%;
+    overflow: hidden;
+}
+
+.gwt-ProgressBar-shell .gwt-ProgressBar-text {
+    padding-top: 2px;
+    margin: 0;
+    color: white;
+    font-family: verdana, arial, sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gwt-ProgressBar-shell .gwt-ProgressBar-cancel {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background:  url('images/cancel.png') no-repeat;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+
+
+.gwt-Chart {
+    padding-top: 5px;
+}
+
+.gwt-StatsGrid {
+    font-family: verdana, arial, sans-serif;
+    font-size: 12px;
+    color: black;
+    padding: 0;
+    margin: 0;
+}
+
+.gwt-StatsGrid td {
+    padding: 2px;
+    margin: 0;
+    line-height: 14px;
+}
+
+.gwt-Label-OR {
+    font-family: verdana, arial, sans-serif;
+    font-size: 15px;
+    color: #7c9647;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.gwt-Label-DropFiles {
+    padding-top: 28px;
+    padding-bottom: 28px;
+    font-family: verdana, arial, sans-serif;
+    font-size: 12px;
+    color: #2d4b6d;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    border: 2px dashed #888888;
+    border-radius: 7px;
+}
+
+.gwt-Label-DropFiles-Hover {
+    border: 2px solid #444444;
+    color: #7c9647;
+}
+
+.gwt-Label-DropFiles-Disabled {
+    border: 2px dashed #CCCCCC;
+    color: #CCCCCC;
+}
+.gwt-ProgressBar-shell {
+    border: 2px solid #848280;
+    background-color: #454545;
+    height: 16px;
+    width: 50%;
+    margin-left: 10px;
+}
+
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+    background-color: #BB4B44;
+}
+
+.gwt-ProgressBar-shell .gwt-ProgressBar-text {
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+
+.progressLabel {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+.dropFilesLabel {
+    margin-top: 6px;
+    padding-top: 28px;
+    padding-bottom: 28px;
+    font-family: verdana, arial, sans-serif;
+    font-size: 12px;
+    color: #2d4b6d;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    border: 2px dashed #888888;
+    border-radius: 7px;
+}
+
+.dropFilesLabelHover {
+    border: 2px solid #444444;
+    color: #7c9647;
+}
+
+.btnbarpanel {
+}
+
+.demoPanel {
+
+}
+
+.viewSourceBtn {
+    margin-top: 6px;
+    cursor: pointer;
+}
+
+.viewSourceBtn-up {
+
+}
+.viewSourceBtn-up-hovering {
+
+}
+.viewSourceBtn-up-disabled {
+
+}
+
+.viewSourceBtn-down {
+
+}
+
+.cancelButton {
+    margin: 3px 0 -1px 2px;
+    cursor: pointer;
+}
+
+
+
+
