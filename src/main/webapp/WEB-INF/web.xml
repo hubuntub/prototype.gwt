@@ -6,16 +6,24 @@
 <web-app>
 
   <!-- Servlets -->
+<!--   <servlet> -->
+<!--     <servlet-name>greetServlet</servlet-name> -->
+<!--     <servlet-class>com.ge.prototype.sample.server.GreetingServiceImpl</servlet-class> -->
+<!--   </servlet> -->
+
+<!--   <servlet-mapping> -->
+<!--     <servlet-name>greetServlet</servlet-name> -->
+<!--     <url-pattern>/MyGwtApp/greet</url-pattern> -->
+<!--   </servlet-mapping> -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.ge.prototype.sample.server.GreetingServiceImpl</servlet-class>
+    <servlet-name>uploadServlet</servlet-name>
+    <servlet-class>com.ge.prototype.sample.server.FileServletUpload</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/MyGwtApp/greet</url-pattern>
+    <servlet-name>uploadServlet</servlet-name>
+    <url-pattern>/FileServletUpload</url-pattern>
   </servlet-mapping>
-
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>MyGwtApp.html</welcome-file>

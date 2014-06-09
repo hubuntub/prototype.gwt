@@ -101,7 +101,7 @@ public class MyGwtApp implements EntryPoint {
 		chart.setWidth("200px");
 		chart.setHeight("200px");
 		final Uploader uploader = new Uploader();
-		uploader.setUploadURL("/DevNullUploadServlet")
+		uploader.setUploadURL("/FileServletUpload")
 				.setButtonWidth(133)
 				.setButtonHeight(22)
 				.setFileSizeLimit("50 MB")
