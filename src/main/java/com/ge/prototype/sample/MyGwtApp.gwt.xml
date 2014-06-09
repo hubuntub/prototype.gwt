@@ -5,7 +5,7 @@
 	<inherits name="org.moxieapps.gwt.uploader.Uploader" />
 	<!-- We need the JUnit module in the main module, -->
 	<!-- otherwise eclipse complains (Google plugin bug?) -->
-	<inherits name='com.google.gwt.junit.JUnit' />
+	<!-- <inherits name='com.google.gwt.junit.JUnit' /> -->
 
 	<!-- Inherit the default GWT style sheet. You can change -->
 	<!-- the theme of your GWT application by uncommenting -->
@@ -17,10 +17,10 @@
 	<!-- Other module inherits -->
 	<inherits name='com.google.gwt.widgetideas.WidgetIdeas' />
 	<inherits name='com.google.gwt.libideas.LibIdeas' />
-	<inherits name="org.moxieapps.gwt.highcharts.Highcharts"/>
+	<inherits name="org.moxieapps.gwt.highcharts.Highcharts" />
 	<!-- Specify the app entry point class. -->
 	<entry-point class='com.ge.prototype.sample.client.MyGwtApp' />
-	<stylesheet src="../MyGwtApp.css"/>
+	<stylesheet src="../MyGwtApp.css" />
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />

@@ -66,7 +66,7 @@
 			<artifactId>uploader</artifactId>
 			<version>1.1.0</version>
 		</dependency>
-			<dependency>
+		<dependency>
 			<groupId>org.moxieapps.gwt</groupId>
 			<artifactId>highcharts</artifactId>
 			<version>1.5.0</version>
@@ -239,4 +239,11 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<repositories>
+		<repository>
+			<id>shortbrain-releases</id>
+			<url>https://raw.github.com/shortbrain/shortbrain-tmp-mvn-repository/master/releases</url>
+		</repository>
+	</repositories>
 </project>
+
