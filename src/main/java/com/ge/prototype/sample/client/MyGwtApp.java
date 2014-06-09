@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.moxieapps.gwt.highcharts.client.Chart;
+import org.moxieapps.gwt.highcharts.client.ChartSubtitle;
+import org.moxieapps.gwt.highcharts.client.ChartTitle;
 import org.moxieapps.gwt.highcharts.client.Point;
 import org.moxieapps.gwt.highcharts.client.Series;
 import org.moxieapps.gwt.highcharts.client.ToolTip;
@@ -11,6 +13,7 @@ import org.moxieapps.gwt.highcharts.client.ToolTipData;
 import org.moxieapps.gwt.highcharts.client.ToolTipFormatter;
 import org.moxieapps.gwt.highcharts.client.labels.DataLabels;
 import org.moxieapps.gwt.highcharts.client.plotOptions.PiePlotOptions;
+import org.moxieapps.gwt.uploader.client.File;
 import org.moxieapps.gwt.uploader.client.Uploader;
 import org.moxieapps.gwt.uploader.client.events.FileDialogCompleteEvent;
 import org.moxieapps.gwt.uploader.client.events.FileDialogCompleteHandler;
@@ -27,7 +30,6 @@ import org.moxieapps.gwt.uploader.client.events.UploadErrorHandler;
 import org.moxieapps.gwt.uploader.client.events.UploadProgressEvent;
 import org.moxieapps.gwt.uploader.client.events.UploadProgressHandler;
 
-import com.ge.prototype.sample.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,19 +40,11 @@ import com.google.gwt.event.dom.client.DragOverEvent;
 import com.google.gwt.event.dom.client.DragOverHandler;
 import com.google.gwt.event.dom.client.DropEvent;
 import com.google.gwt.event.dom.client.DropHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
@@ -66,14 +60,6 @@ public class MyGwtApp implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-	/**
-	 * Create a remote service proxy to talk to the server-side Greeting
-	 * service.
-	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
-
-	private final Messages messages = GWT.create(Messages.class);
 
 	/**
 	 * This is the entry point method.
@@ -83,8 +69,9 @@ public class MyGwtApp implements EntryPoint {
 		final VerticalPanel progressBarPanel = new VerticalPanel();
 		final Map<String, ProgressBar> progressBars = new LinkedHashMap<String, ProgressBar>();
 		final Map<String, Image> cancelButtons = new LinkedHashMap<String, Image>();
-		final Map<String, Series> seriesByFile = new LinkedHashMap<String, Series>();
-		final Chart chart = new Chart().setType(Series.Type.PIE).setMarginRight(10);
+		
+		
+		final Chart chart = new Chart().setType(Series.Type.PIE).setMarginRight(0);
 	
 		chart.setToolTip(new ToolTip().setFormatter(new ToolTipFormatter() {
 			public String format(ToolTipData toolTipData) {
@@ -94,12 +81,31 @@ public class MyGwtApp implements EntryPoint {
 			}
 		}));
 
+		ChartTitle chartTitle = new ChartTitle();
+		chartTitle.setText("Progress");
+		ChartSubtitle subTitle = new ChartSubtitle();
+		subTitle.setText(null);
+		chart.setTitle(chartTitle, subTitle);
 		chart.setPlotBackgroundColor("none");
 		chart.setPlotBorderWidth(0);
 		chart.setPlotShadow(false);
-		
+		chart.setTitle("Progress");
 		chart.setWidth("200px");
 		chart.setHeight("200px");
+		
+		
+		final Series localSeries = chart.createSeries();
+		localSeries.setPlotOptions(new PiePlotOptions().setSize(.50)
+				.setInnerSize(.20)
+				.setDataLabels(new DataLabels().setEnabled(false)));
+		
+		final Series globalSeries = chart.createSeries();
+		globalSeries.setPlotOptions(new PiePlotOptions().setSize(.45)
+				.setInnerSize(.20)
+				.setDataLabels(new DataLabels().setEnabled(false)));
+		
+		chart.addSeries(localSeries, true, true);
+		chart.addSeries(globalSeries, true, true);
 		final Uploader uploader = new Uploader();
 		uploader.setUploadURL("/FileServletUpload")
 				.setButtonWidth(133)
@@ -120,10 +126,8 @@ public class MyGwtApp implements EntryPoint {
 						progressBar.setWidth("200px");
 						progressBars.put(fileQueuedEvent.getFile().getId(),
 								progressBar);
-
 						// Add Cancel Button Image
-						final Image cancelButton = new Image(GWT
-								.getModuleBaseURL() + "images/cancel.png");
+						final Image cancelButton = new Image("/images/cancel.png");
 						cancelButton.setStyleName("cancelButton");
 						cancelButton.addClickHandler(new ClickHandler() {
 							public void onClick(ClickEvent event) {
@@ -138,15 +142,9 @@ public class MyGwtApp implements EntryPoint {
 						cancelButtons.put(fileQueuedEvent.getFile().getId(),
 								cancelButton);
 
-						Series series = chart
-								.createSeries()
-								.setName("Uploaded files");
-								
-						chart.addSeries(series);
-						series.setPlotOptions(new PiePlotOptions().setSize(.45)
-								.setInnerSize(.20)
-								.setDataLabels(new DataLabels().setEnabled(false)));
-						seriesByFile.put(fileQueuedEvent.getFile().getId(), series);
+						
+						
+						
 						// Add the Bar and Button to the interface
 						HorizontalPanel progressBarAndButtonPanel = new HorizontalPanel();
 						progressBarAndButtonPanel.add(progressBar);
@@ -157,18 +155,20 @@ public class MyGwtApp implements EntryPoint {
 				})
 				.setUploadProgressHandler(new UploadProgressHandler() {
 					public boolean onUploadProgress(
+							
 							UploadProgressEvent uploadProgressEvent) {
+						File file = uploadProgressEvent.getFile();
+						String fileName = file.getName();
 						ProgressBar progressBar = progressBars
-								.get(uploadProgressEvent.getFile().getId());
+								.get(file.getId());
 						double value = (double) uploadProgressEvent
 								.getBytesComplete()
 								/ uploadProgressEvent.getBytesTotal();
 						progressBar.setProgress(value);
-						Series series = seriesByFile.get(uploadProgressEvent.getFile().getId());
-						series.setPoints(
-								new Point[] { new Point("files", value)
-										.setColor("#4572A7") });
-						chart.addSeries(series, true, true);
+						localSeries.setPoints(
+								new Point[] { new Point(fileName, value)
+										.setColor("#FFBC75") });
+					
 						return true;
 					}
 				})
@@ -178,6 +178,10 @@ public class MyGwtApp implements EntryPoint {
 						cancelButtons
 								.get(uploadCompleteEvent.getFile().getId())
 								.removeFromParent();
+						int value = cancelButtons.size();
+						globalSeries.setPoints(
+							new Point[] { new Point("files", value)
+									.setColor("#95CEFF") });
 						uploader.startUpload();
 						return true;
 					}
@@ -200,6 +204,7 @@ public class MyGwtApp implements EntryPoint {
 					public boolean onFileDialogComplete(
 							FileDialogCompleteEvent fileDialogCompleteEvent) {
 						if (fileDialogCompleteEvent.getTotalFilesInQueue() > 0) {
+						
 							if (uploader.getStats().getUploadsInProgress() <= 0) {
 								uploader.startUpload();
 							}
@@ -232,7 +237,6 @@ public class MyGwtApp implements EntryPoint {
 	
 		VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.add(uploader);
-		verticalPanel.add(chart);
 		if (Uploader.isAjaxUploadWithProgressEventsSupported()) {
 			final Label dropFilesLabel = new Label("Drop Files Here");
 			dropFilesLabel.setStyleName("dropFilesLabel");
@@ -266,18 +270,11 @@ public class MyGwtApp implements EntryPoint {
 			verticalPanel.add(dropFilesLabel);
 		}
 
-		HorizontalPanel horizontalPanel = new HorizontalPanel();
-		horizontalPanel.add(verticalPanel);
-		horizontalPanel.add(progressBarPanel);
-
-		horizontalPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-		horizontalPanel.setCellHorizontalAlignment(uploader,
-				HorizontalPanel.ALIGN_LEFT);
-		horizontalPanel.setCellHorizontalAlignment(progressBarPanel,
-				HorizontalPanel.ALIGN_RIGHT);
 
 		// noinspection GwtToHtmlReferences
-		RootPanel.get("uploaderContainer").add(horizontalPanel);
+		RootPanel.get("uploaderContainer").add(verticalPanel);
+		RootPanel.get("progressContainer").add(progressBarPanel);
+		RootPanel.get("chartContainer").add(chart);
 	}
 
 	protected class CancelProgressBarTextFormatter extends

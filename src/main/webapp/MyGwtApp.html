@@ -26,8 +26,9 @@
 <!--                                           -->
 <script type="text/javascript" language="javascript"
 	src="MyGwtApp/MyGwtApp.nocache.js"></script>
-	<script type="text/javascript"
-   src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+	
 </script>
 <script type="text/javascript" src="js/highcharts.js"></script>
 </head>
@@ -51,21 +52,18 @@
 			application to display correctly.</div>
 	</noscript>
 
-	<h1>Web Application Starter Project</h1>
-		<table align="center">
-			<tr>
-				<td colspan="3" style="font-weight: bold;">Please enter your
-					name:</td>
-			</tr>
-			<tr>
-				<td id="nameFieldContainer"></td>
-				<td id="sendButtonContainer"></td>
-				<td id="uploaderContainer"></td>
-			</tr>
-			<tr>
-				<td colspan="3" style="color: red;" id="errorLabelContainer"></td>
-			</tr>
-		</table>
-		
+	<h1>Web Application for uploading documents</h1>
+	<table align="center">
+		<tr>
+			<td colspan="3" style="font-weight: bold;">Please drag and drop files into the drop zone ...</td>
+		</tr>
+		<tr>
+
+			<td id="uploaderContainer"></td>
+			<td id="progressContainer"></td>
+			<td id="chartContainer"></td>
+		</tr>
+	</table>
+
 </body>
 </html>
