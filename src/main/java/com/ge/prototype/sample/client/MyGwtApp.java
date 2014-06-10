@@ -41,6 +41,7 @@ import com.google.gwt.event.dom.client.DragOverHandler;
 import com.google.gwt.event.dom.client.DropEvent;
 import com.google.gwt.event.dom.client.DropHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -67,6 +68,7 @@ public class MyGwtApp implements EntryPoint {
 	public void onModuleLoad() {
 
 		final VerticalPanel progressBarPanel = new VerticalPanel();
+	
 		final Map<String, ProgressBar> progressBars = new LinkedHashMap<String, ProgressBar>();
 		final Map<String, Image> cancelButtons = new LinkedHashMap<String, Image>();
 		final Map<String, Image> extensionsImages = new LinkedHashMap<String, Image>();
@@ -97,17 +99,17 @@ public class MyGwtApp implements EntryPoint {
 		
 		
 		final Series localSeries = chart.createSeries();
-		localSeries.setPlotOptions(new PiePlotOptions().setSize(10)
-				.setInnerSize(.40)
-				.setDataLabels(new DataLabels().setEnabled(false)));
+		localSeries.setPlotOptions(new PiePlotOptions().setSize(100)
+				.setInnerSize(.0)
+				.setDataLabels(new DataLabels().setEnabled(true)));
 		
 		final Series globalSeries = chart.createSeries();
 		globalSeries.setPlotOptions(new PiePlotOptions().setSize(.45)
 				.setInnerSize(.20)
-				.setDataLabels(new DataLabels().setEnabled(false)));
+				.setDataLabels(new DataLabels().setEnabled(true)));
 		
 		chart.addSeries(localSeries, true, true);
-		chart.addSeries(globalSeries, true, true);
+		chart.addSeries(globalSeries, false, true);
 		final Point localPoint = new Point("initial file", 0);
 		localPoint.setColor("#2d4b6d");
 		final Uploader uploader = new Uploader();
@@ -129,8 +131,7 @@ public class MyGwtApp implements EntryPoint {
 						progressBar.setTitle(file.getName());
 						progressBar.setHeight("20px");
 						progressBar.setWidth("200px");
-						progressBars.put(file.getId(),
-								progressBar);
+						progressBars.put(file.getId(), progressBar);
 						// Add Cancel Button Image
 						final Image cancelButton = new Image(resources.cancelButton());
 						cancelButton.setStyleName("cancelButton");
@@ -150,7 +151,7 @@ public class MyGwtApp implements EntryPoint {
 						image.setWidth("32px");
 						image.setHeight("32px");
 						extensionsImages.put(file.getId(), image);
-						localPoint.update(new Point(file.getType(), 0.0));
+						localPoint.update(new Point(file.getType(), file.getTimeRemaining()));
 						pointsByFile.put(file.getId(), localPoint);
 						localSeries.addPoint(localPoint);
 						// Add the Bar and Button to the interface
@@ -174,9 +175,8 @@ public class MyGwtApp implements EntryPoint {
 								/ uploadProgressEvent.getBytesTotal();
 						progressBar.setProgress(value);
 						Point point = pointsByFile.get(file.getId());
-						point.update(new Point(fileName, value));
-					
-						globalSeries.addPoint(point);
+						point.update(new Point(fileName, file.getPercentUploaded()));
+						globalSeries.addPoint(new Point(fileName, file.getPercentUploaded()));
 						return true;
 					}
 				})
@@ -187,8 +187,8 @@ public class MyGwtApp implements EntryPoint {
 						cancelButtons
 								.get(file.getId())
 								.removeFromParent();
-						int value = cancelButtons.size();
 						Point point = pointsByFile.get(file.getId());
+						point.update(new Point(file.getName(), file.getPercentUploaded()));
 						localSeries.removePoint(point);
 						uploader.startUpload();
 						return true;
