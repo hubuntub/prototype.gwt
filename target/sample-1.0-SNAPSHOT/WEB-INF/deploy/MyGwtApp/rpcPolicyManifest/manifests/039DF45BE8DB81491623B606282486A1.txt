@@ -1,2 +1,0 @@
-serviceClass: com.ge.prototype.sample.client.GreetingService
-path: 7FCFE8260A0FE623E1D36D3C542CC8D9.gwt.rpc
