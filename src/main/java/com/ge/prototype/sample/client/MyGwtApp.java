@@ -60,7 +60,7 @@ public class MyGwtApp implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-
+	Resources resources = GWT.create(Resources.class);
 	/**
 	 * This is the entry point method.
 	 */
@@ -69,7 +69,8 @@ public class MyGwtApp implements EntryPoint {
 		final VerticalPanel progressBarPanel = new VerticalPanel();
 		final Map<String, ProgressBar> progressBars = new LinkedHashMap<String, ProgressBar>();
 		final Map<String, Image> cancelButtons = new LinkedHashMap<String, Image>();
-		
+		final Map<String, Image> extensionsImages = new LinkedHashMap<String, Image>();
+		final Map<String,Point> pointsByFile = new LinkedHashMap<>();		
 		
 		final Chart chart = new Chart().setType(Series.Type.PIE).setMarginRight(0);
 	
@@ -89,14 +90,15 @@ public class MyGwtApp implements EntryPoint {
 		chart.setPlotBackgroundColor("none");
 		chart.setPlotBorderWidth(0);
 		chart.setPlotShadow(false);
+		chart.setSizeToMatchContainer();
 		chart.setTitle("Progress");
-		chart.setWidth("200px");
-		chart.setHeight("200px");
+		chart.setWidth("300px");
+		chart.setHeight("300px");
 		
 		
 		final Series localSeries = chart.createSeries();
-		localSeries.setPlotOptions(new PiePlotOptions().setSize(.50)
-				.setInnerSize(.20)
+		localSeries.setPlotOptions(new PiePlotOptions().setSize(10)
+				.setInnerSize(.40)
 				.setDataLabels(new DataLabels().setEnabled(false)));
 		
 		final Series globalSeries = chart.createSeries();
@@ -106,6 +108,8 @@ public class MyGwtApp implements EntryPoint {
 		
 		chart.addSeries(localSeries, true, true);
 		chart.addSeries(globalSeries, true, true);
+		final Point localPoint = new Point("initial file", 0);
+		localPoint.setColor("#2d4b6d");
 		final Uploader uploader = new Uploader();
 		uploader.setUploadURL("/FileServletUpload")
 				.setButtonWidth(133)
@@ -117,45 +121,49 @@ public class MyGwtApp implements EntryPoint {
 				.setFileQueuedHandler(new FileQueuedHandler() {
 					public boolean onFileQueued(
 							final FileQueuedEvent fileQueuedEvent) {
+						File file = fileQueuedEvent.getFile();
 						// Create a Progress Bar for this file
 						final ProgressBar progressBar = new ProgressBar(0.0,
 								1.0, 0.0, new CancelProgressBarTextFormatter());
-						progressBar.setTitle(fileQueuedEvent.getFile()
-								.getName());
-						progressBar.setHeight("18px");
+						progressBar.setTextVisible(true);
+						progressBar.setTitle(file.getName());
+						progressBar.setHeight("20px");
 						progressBar.setWidth("200px");
-						progressBars.put(fileQueuedEvent.getFile().getId(),
+						progressBars.put(file.getId(),
 								progressBar);
 						// Add Cancel Button Image
-						final Image cancelButton = new Image("/images/cancel.png");
+						final Image cancelButton = new Image(resources.cancelButton());
 						cancelButton.setStyleName("cancelButton");
 						cancelButton.addClickHandler(new ClickHandler() {
 							public void onClick(ClickEvent event) {
-								uploader.cancelUpload(fileQueuedEvent.getFile()
-										.getId(), false);
+								File file = fileQueuedEvent.getFile();
+								uploader.cancelUpload(
+										file.getId(), false);
 								progressBars.get(
-										fileQueuedEvent.getFile().getId())
+										file.getId())
 										.setProgress(-1.0d);
 								cancelButton.removeFromParent();
 							}
 						});
-						cancelButtons.put(fileQueuedEvent.getFile().getId(),
-								cancelButton);
-
-						
-						
-						
+						cancelButtons.put(file.getId(), cancelButton);
+						final Image image = new Image(ResourceUtils.getResource(file.getType()));
+						image.setWidth("32px");
+						image.setHeight("32px");
+						extensionsImages.put(file.getId(), image);
+						localPoint.update(new Point(file.getType(), 0.0));
+						pointsByFile.put(file.getId(), localPoint);
+						localSeries.addPoint(localPoint);
 						// Add the Bar and Button to the interface
 						HorizontalPanel progressBarAndButtonPanel = new HorizontalPanel();
 						progressBarAndButtonPanel.add(progressBar);
 						progressBarAndButtonPanel.add(cancelButton);
+						progressBarAndButtonPanel.add(image);
 						progressBarPanel.add(progressBarAndButtonPanel);
 						return true;
 					}
 				})
 				.setUploadProgressHandler(new UploadProgressHandler() {
 					public boolean onUploadProgress(
-							
 							UploadProgressEvent uploadProgressEvent) {
 						File file = uploadProgressEvent.getFile();
 						String fileName = file.getName();
@@ -165,23 +173,23 @@ public class MyGwtApp implements EntryPoint {
 								.getBytesComplete()
 								/ uploadProgressEvent.getBytesTotal();
 						progressBar.setProgress(value);
-						localSeries.setPoints(
-								new Point[] { new Point(fileName, value)
-										.setColor("#FFBC75") });
+						Point point = pointsByFile.get(file.getId());
+						point.update(new Point(fileName, value));
 					
+						globalSeries.addPoint(point);
 						return true;
 					}
 				})
 				.setUploadCompleteHandler(new UploadCompleteHandler() {
 					public boolean onUploadComplete(
 							UploadCompleteEvent uploadCompleteEvent) {
+						File file = uploadCompleteEvent.getFile();
 						cancelButtons
-								.get(uploadCompleteEvent.getFile().getId())
+								.get(file.getId())
 								.removeFromParent();
 						int value = cancelButtons.size();
-						globalSeries.setPoints(
-							new Point[] { new Point("files", value)
-									.setColor("#95CEFF") });
+						Point point = pointsByFile.get(file.getId());
+						localSeries.removePoint(point);
 						uploader.startUpload();
 						return true;
 					}
@@ -195,7 +203,8 @@ public class MyGwtApp implements EntryPoint {
 							progressBarPanel.clear();
 							progressBars.clear();
 							cancelButtons.clear();
-							
+							pointsByFile.clear();
+							extensionsImages.clear();
 						}
 						return true;
 					}
@@ -282,9 +291,9 @@ public class MyGwtApp implements EntryPoint {
 		@Override
 		protected String getText(ProgressBar bar, double curProgress) {
 			if (curProgress < 0) {
-				return "Cancelled";
+				return bar.getTitle() + "Cancelled";
 			}
-			return ((int) (100 * bar.getPercent())) + "%";
+			return bar.getTitle() + ": " + ((int) (100 * bar.getPercent())) + "%";
 		}
 	}
 }

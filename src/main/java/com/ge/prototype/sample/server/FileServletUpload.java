@@ -22,6 +22,7 @@ public class FileServletUpload extends HttpServlet {
 
 	private long FILE_SIZE_LIMIT = 20 * 1024 * 1024; // 20 MiB
 	private final Logger logger = Logger.getLogger("UploadServlet");
+	private long fileSizeMax;
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -30,8 +31,12 @@ public class FileServletUpload extends HttpServlet {
 			DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 			ServletFileUpload fileUpload = new ServletFileUpload(
 					fileItemFactory);
-			fileUpload.setSizeMax(FILE_SIZE_LIMIT);
 			Config conf = ConfigFactory.load();
+			int max = conf.getInt("upload.max-mega-byte");
+			
+			fileSizeMax = max * 1024 * 1024;
+			fileUpload.setSizeMax(fileSizeMax);
+			
 			String path = conf.getString("upload.path");
 			File folder = new File(path);
 
@@ -57,7 +62,7 @@ public class FileServletUpload extends HttpServlet {
 				}
 
 				if (!item.isFormField()) {
-					if (item.getSize() > FILE_SIZE_LIMIT) {
+					if (item.getSize() > fileSizeMax) {
 						resp.sendError(
 								HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE,
 								"File size exceeds limit");
